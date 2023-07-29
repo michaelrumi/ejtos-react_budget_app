@@ -71,8 +71,26 @@ export const AppReducer = (state, action) => {
                 ...state
             }
 
+        case 'CHANGE_BUDGET':
+            const newBudget = action.payload;
+
+            if (newBudget > 20000) {
+                alert('Budget cannot exceed 20,000');
+                return state;
+            }
+
+            const totalExpense = state.expenses.reduce((total, item) => total + item.cost, 0);
+            if (newBudget < totalExpense) {
+                alert('Budget cannot be less than total spending');
+                return state;
+            }
+
+            return {
+                ...state,
+                budget: newBudget,
+            };
         default:
-            return state;
+            return state; 
     }
 };
 
@@ -98,6 +116,21 @@ export const AppProvider = (props) => {
     // 4. Sets up the app state. takes a reducer, and an initial state
     const [state, dispatch] = useReducer(AppReducer, initialState);
     let remaining = 0;
+    const changeBudget = (value) => {
+        if (value > 20000) {
+            alert('Budget cannot exceed 20,000');
+            return;
+        }
+        let totalExpenses = state.expenses.reduce((total, item) => total + item.cost, 0);
+        if (value < totalExpenses) {
+            alert('Budget cannot be less than total expenses');
+            return;
+        }
+        dispatch({
+            type: 'SET_BUDGET',
+            payload: value
+        });
+    }
 
     if (state.expenses) {
             const totalExpenses = state.expenses.reduce((total, item) => {
@@ -112,8 +145,9 @@ export const AppProvider = (props) => {
                 expenses: state.expenses,
                 budget: state.budget,
                 remaining: remaining,
-                dispatch,
-                currency: state.currency
+                dispatch, 
+                currency: state.currency,
+                changeBudget: changeBudget
             }}
         >
             {props.children}

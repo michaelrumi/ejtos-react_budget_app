@@ -1,0 +1,19 @@
+.currency-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4CAF50; 
+}
+
+.currency-select {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 16px;
+}
+
+.currency-select:hover {
+    background: white;
+    color: #4CAF50;
+}
